@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050816">
+<title>12A2 | Giao tiếp văn minh trong không gian mạng</title>
+<style>
+:root{--bg:#050816;--panel:#0a1530;--cyan:#45eaff;--blue:#3985ff;--violet:#a46bff;--text:#eaf7ff;--muted:#a7bdd7}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+button,a{font:inherit}
+a{color:inherit;text-decoration:none}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none}
+.aurora{position:fixed;z-index:-2;width:42vw;height:42vw;border-radius:50%;filter:blur(90px);opacity:.14;pointer-events:none;background:#075dff;animation:drift 14s ease-in-out infinite alternate}
+.aurora.a{top:-15%;left:-10%}.aurora.b{right:-15%;bottom:-15%;background:#812dff;animation-delay:-7s}
+.gridbg{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.13;background-image:linear-gradient(#228dff25 1px,transparent 1px),linear-gradient(90deg,#228dff25 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:#050816d9;border-bottom:1px solid #42dfff26}
+.nav{max-width:1180px;margin:auto;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.08em}
+.logo{width:38px;height:38px;border:1px solid var(--cyan);border-radius:12px;display:grid;place-items:center;color:var(--cyan);box-shadow:0 0 20px #1caaff30;font-weight:900}
+nav{display:flex;gap:20px;align-items:center;color:#c6d7ee;font-size:.9rem}
+nav a:hover{color:var(--cyan)}
+.menu{display:none;background:#0c1b37;color:white;border:1px solid #2e75b8;border-radius:10px;padding:7px 11px}
+.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+.hero{min-height:570px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:40px;padding:72px 0 60px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--cyan);border:1px solid #38cfff55;background:#061a30b5;border-radius:99px;padding:7px 13px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
+.pulse{width:7px;height:7px;background:#54f7ff;border-radius:50%;box-shadow:0 0 12px #54f7ff;animation:pulse 1.7s infinite}
+h1{font-size:clamp(2.6rem,6vw,5.2rem);line-height:1.02;letter-spacing:-.045em;margin:22px 0}
+.gradient{background:linear-gradient(100deg,#fff 5%,#63eaff 45%,#a98bff 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);max-width:610px;font-size:1.08rem}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;padding:12px 18px;border-radius:12px;border:1px solid #4b9eff66;background:#0a1c38;color:#e9faff;font-weight:700;transition:transform .2s,box-shadow .2s}
+.btn.primary{border-color:transparent;background:linear-gradient(100deg,#087ef5,#7457ff);box-shadow:0 8px 28px #236dff40}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 28px #1d9eff35}
+.hero-art{position:relative;min-height:370px;display:grid;place-items:center}
+.orbit{position:absolute;width:min(330px,75vw);aspect-ratio:1;border:1px solid #39c9ff52;border-radius:50%;box-shadow:inset 0 0 40px #168bff0b,0 0 45px #168bff12;animation:spin 24s linear infinite}
+.orbit:before,.orbit:after{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan);top:15%;left:18%}
+.orbit:after{top:auto;left:auto;right:8%;bottom:28%;background:var(--violet);box-shadow:0 0 18px var(--violet)}
+.core{width:190px;aspect-ratio:1;border-radius:34px;transform:rotate(-8deg);display:grid;place-items:center;background:linear-gradient(145deg,#102f59dd,#10102ddd);border:1px solid #63dfff88;box-shadow:0 0 60px #147cff33,inset 0 0 35px #3bbdff17;position:relative}
+.core span{font-size:5rem;filter:drop-shadow(0 0 18px #42dfff);transform:rotate(8deg)}
+.float-card{position:absolute;border:1px solid #43caff55;background:#07142adf;backdrop-filter:blur(12px);border-radius:14px;padding:12px 15px;box-shadow:0 12px 35px #0005;font-size:.82rem;color:#d7f7ff}
+.float-card strong{display:block;color:var(--cyan);font-size:1rem}.fc1{top:9%;right:0}.fc2{bottom:9%;left:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 78px}
+.stat{padding:18px;border:1px solid #3e9fff2c;border-radius:16px;background:linear-gradient(145deg,#0b1830bb,#081022bb);text-align:center}
+.stat b{font-size:1.5rem;color:var(--cyan);display:block}.stat span{font-size:.85rem;color:var(--muted)}
+section{padding:54px 0;scroll-margin-top:80px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:26px}
+.kicker{font-size:.76rem;text-transform:uppercase;letter-spacing:.16em;color:var(--cyan);font-weight:800}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.15;margin:8px 0}
+.section-head p{max-width:510px;color:var(--muted);margin:0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{position:relative;overflow:hidden;border:1px solid #4a9bdf32;background:linear-gradient(145deg,#0c1b35eF,#070d1dee);border-radius:18px;padding:23px;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-5px);border-color:#48dfff99}
+.card:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent);opacity:.7}
+.icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#102d50;color:var(--cyan);font-size:1.5rem;border:1px solid #42cfff45;margin-bottom:17px}
+.card h3{margin:0 0 8px;font-size:1.15rem}.card p{color:var(--muted);font-size:.94rem;margin:0 0 15px}
+.tag{display:inline-block;color:#9eeeff;background:#0b2b45;border:1px solid #1e8db755;border-radius:99px;padding:4px 9px;font-size:.75rem}
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+.feature-panel{border:1px solid #4a9bdf32;background:linear-gradient(145deg,#0d1b37,#070d1d);border-radius:20px;padding:27px}
+.feature-panel h3{font-size:1.35rem;margin:0 0 10px}
+.feature-panel p,.feature-panel li{color:var(--muted)}
+.feature-panel ul{padding-left:20px}
+.code-visual{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#030914;border:1px solid #254d75;border-radius:14px;padding:18px;color:#a5d8ff;overflow:hidden}
+.code-top{display:flex;gap:6px;margin-bottom:16px}.dot{width:8px;height:8px;border-radius:50%;background:#ff6685}.dot:nth-child(2){background:#ffca67}.dot:nth-child(3){background:#56e8a7}
+.code-line{height:8px;border-radius:5px;background:#16436a;margin:12px 0;animation:codeglow 3s ease-in-out infinite alternate}
+.code-line:nth-child(2n){width:70%;background:#244078}.code-line:nth-child(3n){width:48%;background:#174d65}
+.quiz{border:1px solid #3caeff40;background:#09152d;border-radius:20px;padding:24px}
+.quiz-q{font-size:1.1rem;font-weight:750;margin:0 0 16px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answer{cursor:pointer;text-align:left;border:1px solid #315577;background:#0b1d37;color:#e5f7ff;padding:12px 14px;border-radius:11px;transition:.2s}
+.answer:hover{border-color:var(--cyan);background:#102b4b}
+.answer.correct{border-color:#47e3ac;background:#073a36}.answer.wrong{border-color:#ff748c;background:#3a1428}
+.feedback{min-height:28px;color:var(--cyan);margin-top:14px}
+footer{border-top:1px solid #2b65902e;margin-top:40px;padding:28px 0;color:#8ca8c6;font-size:.88rem}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{opacity:.35;transform:scale(.8)}}@keyframes drift{to{transform:translate(45px,30px)}}@keyframes codeglow{to{filter:brightness(1.8);transform:translateX(4px)}}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:55px;gap:8px}.hero-art{min-height:300px}.cards{grid-template-columns:1fr 1fr}.feature{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:10px}nav{gap:12px;font-size:.82rem}}
+@media(max-width:560px){.wrap{width:min(100% - 28px,1180px)}.nav{padding:10px 14px}.menu{display:block}nav{display:none;position:absolute;top:60px;left:12px;right:12px;padding:16px;background:#08152df7;border:1px solid #315577;border-radius:14px;flex-direction:column;align-items:stretch}nav.open{display:flex}.hero{min-height:auto;padding:48px 0 30px}.hero-art{min-height:270px}.core{width:145px}.core span{font-size:4rem}.orbit{width:240px}.float-card{font-size:.72rem;padding:9px 11px}.stats{gap:8px;margin-bottom:40px}.stat{padding:12px 6px}.stat b{font-size:1.2rem}.stat span{font-size:.72rem}.cards{grid-template-columns:1fr}.answers{grid-template-columns:1fr}section{padding:38px 0}.feature-panel{padding:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="space" aria-hidden="true"></canvas><div class="aurora a"></div><div class="aurora b"></div><div class="gridbg"></div>
+<header><div class="nav">
+  <a class="brand" href="#home"><span class="logo">12A2</span><span>DIGITAL UNIVERSE</span></a>
+  <button class="menu" id="menu" aria-label="Mở menu">☰</button>
+  <nav id="nav"><a href="#home">Trang chủ</a><a href="#topics">Chủ đề</a><a href="#lab">Góc công nghệ</a><a href="#netiquette">7 câu hỏi</a><a href="#quiz">Trắc nghiệm</a></nav>
+</div></header>
+<main>
+<div class="wrap" id="home">
+<section class="hero">
+ <div class="reveal">
+  <span class="eyebrow"><i class="pulse"></i> Khám phá thế giới số</span>
+  <h1>CHẠM VÀO<br><span class="gradient">TƯƠNG LAI</span></h1>
+  <p class="lead">Công nghệ thông tin không chỉ là những dòng mã. Đó là cách chúng ta kết nối ý tưởng, giải quyết vấn đề và tạo nên những điều mới mẻ cho thế giới.</p>
+  <div class="actions"><a class="btn primary" href="#topics">Khám phá ngay <span>↗</span></a><a class="btn" href="#quiz">Thử thách kiến thức <span>⌁</span></a></div>
+ </div>
+ <div class="hero-art reveal" aria-label="Minh họa công nghệ số">
+  <div class="orbit"></div><div class="core"><span>⌘</span></div>
+  <div class="float-card fc1"><strong>AI / DATA</strong>Ý tưởng thành hiện thực</div>
+  <div class="float-card fc2"><strong>01 — CREATE</strong>Học hỏi · Sáng tạo · Kết nối</div>
+ </div>
+</section>
+<div class="stats reveal">
+ <div class="stat"><b>01</b><span>Tư duy số</span></div><div class="stat"><b>∞</b><span>Ý tưởng sáng tạo</span></div><div class="stat"><b>24/7</b><span>Khám phá và học hỏi</span></div>
+</div>
+<section id="topics">
+ <div class="section-head reveal"><div><div class="kicker">Explore / 01</div><h2>Những mảnh ghép công nghệ</h2></div><p>Tìm hiểu các lĩnh vực đang thay đổi cách con người học tập, làm việc và giao tiếp mỗi ngày.</p></div>
+ <div class="cards">
+  <article class="card reveal"><div class="icon">✳</div><h3>Trí tuệ nhân tạo</h3><p>AI giúp máy tính nhận diện mẫu, xử lý ngôn ngữ và hỗ trợ con người giải quyết nhiều nhiệm vụ.</p><span class="tag">AI · Machine Learning</span></article>
+  <article class="card reveal"><div class="icon">⌘</div><h3>Lập trình</h3><p>Biến ý tưởng thành sản phẩm bằng thuật toán, tư duy logic và những dòng mã có cấu trúc.</p><span class="tag">HTML · CSS · JavaScript</span></article>
+  <article class="card reveal"><div class="icon">◈</div><h3>An toàn số</h3><p>Bảo vệ tài khoản, tạo mật khẩu mạnh, nhận biết lừa đảo và suy nghĩ kỹ trước khi chia sẻ dữ liệu.</p><span class="tag">Privacy · Cybersecurity</span></article>
+  <article class="card reveal"><div class="icon">▤</div><h3>Dữ liệu lớn</h3><p>Dữ liệu giúp khám phá xu hướng, hỗ trợ dự đoán và đưa ra quyết định dựa trên bằng chứng.</p><span class="tag">Data · Analytics</span></article>
+  <article class="card reveal"><div class="icon">☁</div><h3>Điện toán đám mây</h3><p>Lưu trữ và sử dụng dịch vụ qua mạng để cộng tác linh hoạt từ nhiều thiết bị khác nhau.</p><span class="tag">Cloud · Collaboration</span></article>
+  <article class="card reveal"><div class="icon">◎</div><h3>Công nghệ vì cộng đồng</h3><p>Ứng dụng số có ích khi dễ tiếp cận, tôn trọng con người và giải quyết nhu cầu thực tế.</p><span class="tag">Digital future</span></article>
+ </div>
+</section>
+<section id="lab">
+ <div class="section-head reveal"><div><div class="kicker">Digital lab / 02</div><h2>Từ ý tưởng đến sản phẩm</h2></div><p>Một dự án tốt bắt đầu từ câu hỏi đúng, thử nghiệm nhỏ và cải tiến liên tục.</p></div>
+ <div class="feature">
+  <div class="feature-panel reveal"><div class="kicker">Mindset</div><h3>Không chỉ học công cụ — hãy học cách tư duy.</h3><p>Khi làm một sản phẩm số, hãy bắt đầu bằng việc xác định vấn đề, tìm hiểu người dùng, thử giải pháp và kiểm tra kết quả.</p><ul><li>Phân tích vấn đề thành các bước nhỏ.</li><li>Kiểm chứng thông tin trước khi tin hoặc chia sẻ.</li><li>Sử dụng AI có trách nhiệm, minh bạch và trung thực.</li></ul><a class="btn" href="#quiz">Kiểm tra kiến thức →</a></div>
+  <div class="feature-panel reveal"><div class="code-visual"><div class="code-top"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><div style="color:#65e9ff">// your idea, your future</div><div class="code-line" style="width:88%"></div><div class="code-line"></div><div class="code-line" style="width:58%"></div><div class="code-line" style="width:78%"></div><div class="code-line" style="width:40%"></div><div style="color:#b69aff;margin-top:18px">build(); learn(); improve();</div></div><h3 style="margin-top:20px">Vòng lặp sáng tạo</h3><p>Quan sát → Lên ý tưởng → Tạo bản thử nghiệm → Nhận phản hồi → Cải tiến.</p></div>
+ </div>
+</section>
+
+<section id="netiquette">
+ <div class="section-head reveal"><div><div class="kicker">Chủ đề thuyết trình / 04</div><h2>Giao tiếp văn minh trong không gian mạng</h2></div><p>7 nội dung trọng tâm giúp chúng ta hiểu, giao tiếp an toàn và ứng xử có trách nhiệm trên Internet.</p></div>
+ <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">
+  <article class="card reveal"><div class="icon">01</div><h3>Không gian mạng là gì?</h3><p>Không gian mạng là môi trường hình thành từ các mạng máy tính, Internet, nền tảng số và những thiết bị kết nối, nơi con người trao đổi thông tin, học tập, làm việc, giải trí và thực hiện nhiều hoạt động trực tuyến.</p><span class="tag">Khái niệm</span></article>
+  <article class="card reveal"><div class="icon">02</div><h3>Các phương thức giao tiếp phổ biến</h3><p>Gồm nhắn tin, email, gọi thoại hoặc video, mạng xã hội, diễn đàn, bình luận, phòng họp trực tuyến và các nền tảng học tập. Mỗi phương thức phù hợp với mục đích và mức độ trang trọng khác nhau.</p><span class="tag">Phương thức</span></article>
+  <article class="card reveal"><div class="icon">03</div><h3>Ưu điểm và hạn chế</h3><p><b>Ưu điểm:</b> nhanh chóng, tiết kiệm thời gian và chi phí, kết nối khoảng cách xa, dễ chia sẻ tài liệu. <b>Hạn chế:</b> dễ hiểu lầm vì thiếu ngôn ngữ cơ thể, có nguy cơ lộ dữ liệu, tin giả, bắt nạt trực tuyến và lệ thuộc thiết bị.</p><span class="tag">Hai mặt của công nghệ</span></article>
+  <article class="card reveal"><div class="icon">04</div><h3>Ứng xử nhân văn và văn hóa</h3><p>Tôn trọng sự khác biệt, dùng lời nói lịch sự, biết lắng nghe, đồng cảm, hỗ trợ người khác và không tham gia công kích. Trước khi đăng hoặc chia sẻ, hãy cân nhắc tác động của nội dung đối với người đọc.</p><span class="tag">Tôn trọng · Đồng cảm</span></article>
+  <article class="card reveal"><div class="icon">05</div><h3>Nguyên tắc ứng xử trên mạng</h3><p>Tôn trọng pháp luật và quyền riêng tư; giao tiếp lịch sự; kiểm chứng thông tin; chịu trách nhiệm với nội dung đăng tải; bảo vệ tài khoản và dữ liệu cá nhân; tôn trọng bản quyền; báo cáo nội dung vi phạm khi cần.</p><span class="tag">Trách nhiệm số</span></article>
+  <article class="card reveal"><div class="icon">06</div><h3>Những hành vi nên làm</h3><p>Suy nghĩ trước khi bình luận; dùng ngôn ngữ rõ ràng, phù hợp; trích nguồn khi sử dụng tài liệu; kiểm tra độ tin cậy của tin tức; đặt mật khẩu mạnh và bật xác thực hai bước; xin phép trước khi đăng hình hoặc thông tin của người khác.</p><span class="tag">Thói quen tốt</span></article>
+  <article class="card reveal"><div class="icon">07</div><h3>Những hành vi cần tránh</h3><p>Không xúc phạm, bắt nạt, đe dọa hay phân biệt đối xử; không phát tán tin giả, thông tin riêng tư hoặc hình ảnh khi chưa được phép; không giả mạo tài khoản, spam, lừa đảo, chia sẻ mật khẩu hay sao chép nội dung mà không ghi nguồn.</p><span class="tag">Tránh gây hại</span></article>
+ </div>
+ <div class="feature-panel reveal" style="margin-top:20px"><div class="kicker">Ghi nhớ</div><h3>Hãy là công dân số có trách nhiệm</h3><p>Trước khi đăng một nội dung, hãy tự hỏi: <b>Thông tin này có đúng không? Có làm tổn thương ai không? Mình có quyền chia sẻ không?</b> Nếu chưa chắc chắn, hãy kiểm tra lại hoặc không đăng.</p></div>
+</section>
+
+<section id="quiz">
+ <div class="section-head reveal"><div><div class="kicker">Quick challenge / 03</div><h2>Thử thách kiến thức</h2></div><p>Chọn một đáp án cho mỗi câu. Hãy đọc kỹ câu hỏi trước khi trả lời.</p></div>
+ <div class="quiz reveal" id="quizbox">
+  <div class="kicker" id="counter">CÂU HỎI 01 / 04</div><p class="quiz-q" id="question">Mục tiêu chính của an toàn thông tin là gì?</p>
+  <div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div>
+  <button class="btn" id="next" style="margin-top:10px" hidden>Câu tiếp theo →</button>
+ </div>
+</section>
+</div>
+</main>
+<footer><div class="wrap" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap"><span>12A2 · DIGITAL UNIVERSE</span><span>Học tập · Sáng tạo · Kết nối</span><a href="#home">Về đầu trang ↑</a></div></footer>
+<script>
+(()=>{
+const canvas=document.getElementById('space'),ctx=canvas.getContext('2d');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let w=0,h=0,d=1,stars=[],bolts=[],tick=0;
+function resize(){d=Math.min(devicePixelRatio||1,1.5);w=innerWidth;h=innerHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);stars=Array.from({length:Math.min(100,Math.floor(w*h/12000))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.7+.4,vx:(Math.random()-.5)*.25,vy:-(Math.random()*.35+.08),a:Math.random()}))}
+function bolt(){let x=Math.random()*w,y=Math.random()*h*.42,p=[{x,y}];for(let i=0;i<8;i++){x+=(Math.random()-.5)*48;y+=7+Math.random()*14;p.push({x,y})}bolts.push({p,l:1})}
+function draw(){ctx.clearRect(0,0,w,h);stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(89,218,255,${.3+s.a*.7})`;ctx.shadowBlur=10;ctx.shadowColor='#168bff';ctx.fill();if(!reduced){s.x+=s.vx;s.y+=s.vy;if(s.y<0)s.y=h;if(s.x<0)s.x=w;if(s.x>w)s.x=0}});ctx.shadowBlur=0;if(!reduced&&++tick%240===0)bolt();bolts.forEach(q=>{ctx.beginPath();q.p.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=`rgba(67,220,255,${q.l})`;ctx.lineWidth=1.5;ctx.shadowBlur=15;ctx.shadowColor='#168bff';ctx.stroke();q.l-=.06});bolts=bolts.filter(q=>q.l>0);if(!reduced)requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();draw();
+const menu=document.getElementById('menu'),nav=document.getElementById('nav');menu.addEventListener('click',()=>nav.classList.toggle('open'));nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const qs=[
+{q:'Mục tiêu chính của an toàn thông tin là gì?',a:['Bảo vệ dữ liệu và quyền riêng tư','Chia sẻ mọi mật khẩu','Tăng độ sáng màn hình','Xóa mọi bản sao lưu'],c:0,why:'Chính xác! An toàn thông tin giúp bảo vệ tính bí mật, toàn vẹn và khả dụng của dữ liệu.'},
+{q:'Khi dùng AI để làm bài tập, cách nào phù hợp nhất?',a:['Chép nguyên văn và nhận là của mình','Kiểm chứng kết quả, tự hiểu và ghi nhận hỗ trợ khi cần','Tin mọi câu trả lời của AI','Dùng AI để né mọi yêu cầu học tập'],c:1,why:'Đúng! Hãy xem AI là công cụ hỗ trợ, kiểm tra thông tin và chịu trách nhiệm với bài làm.'},
+{q:'HTML chủ yếu dùng để làm gì?',a:['Tạo cấu trúc nội dung trang web','Sạc pin máy tính','Quét virus tự động','Thay thế hệ điều hành'],c:0,why:'Đúng! HTML mô tả cấu trúc và nội dung của trang web.'},
+{q:'Bạn nhận được liên kết lạ yêu cầu đăng nhập. Nên làm gì?',a:['Nhập mật khẩu ngay','Chuyển tiếp cho cả lớp','Kiểm tra nguồn gửi và địa chỉ trang trước khi mở','Gửi mã xác thực cho người gửi'],c:2,why:'Chính xác! Không vội nhấp liên kết hoặc cung cấp mật khẩu, mã xác thực cho người khác.'}
+];
+let qi=0,score=0,answered=false;
+const question=document.getElementById('question'),answers=document.getElementById('answers'),feedback=document.getElementById('feedback'),next=document.getElementById('next'),counter=document.getElementById('counter');
+function show(){answered=false;const q=qs[qi];counter.textContent=`CÂU HỎI ${String(qi+1).padStart(2,'0')} / ${String(qs.length).padStart(2,'0')}`;question.textContent=q.q;feedback.textContent='';next.hidden=true;answers.innerHTML='';q.a.forEach((label,i)=>{const btn=document.createElement('button');btn.className='answer';btn.textContent=String.fromCharCode(65+i)+'. '+label;btn.addEventListener('click',()=>{if(answered)return;answered=true;[...answers.children].forEach((el,j)=>{el.disabled=true;if(j===q.c)el.classList.add('correct')});if(i===q.c){score++;feedback.textContent='✓ '+q.why}else{btn.classList.add('wrong');feedback.textContent='Chưa đúng. '+q.why}next.hidden=false;next.textContent=qi===qs.length-1?'Xem kết quả →':'Câu tiếp theo →'});answers.appendChild(btn)})}
+next.addEventListener('click',()=>{if(qi<qs.length-1){qi++;show()}else{counter.textContent='HOÀN THÀNH';question.textContent=`Bạn trả lời đúng ${score}/${qs.length} câu!`;answers.innerHTML='';feedback.textContent=score===qs.length?'Tuyệt vời! Bạn đã nắm vững các kiến thức cơ bản.':'Hãy xem lại các chủ đề phía trên rồi thử lại nhé.';next.textContent='Làm lại ↻';next.onclick=()=>{qi=0;score=0;next.onclick=null;show()}}});
+show();
+})();
+</script>
+</body>
+</html>
